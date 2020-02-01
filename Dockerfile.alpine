@@ -1,12 +1,12 @@
 #
 # builder image
 #
-FROM golang:1.13-buster as builder
+FROM golang:1.13-alpine3.11 as builder
 RUN mkdir -p /build/src
 
 # make sure git and glide packages are present
-RUN apt-get update \
-	&& apt-get install -y git libvirt-dev openssl unzip make build-essential
+RUN apk update \
+	&& apk add --update git openssh make libvirt-dev gcc libc-dev
 
 # standard golang env setup
 ENV GOPATH=/build
@@ -33,5 +33,5 @@ RUN go list -m all \
 	&& chmod a+x terraform-provider-libvirt \
 	&& cp terraform-provider-libvirt $GOPATH/.
 
-CMD [ "/bin/bash" ]
+CMD [ "/bin/sh" ]
 

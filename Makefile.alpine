@@ -1,14 +1,14 @@
 OWNER := fabianlee
-PROJECT := terraform-libvirt-provider
+PROJECT := terraform-libvirt-provider-musl
 VERSION := 1.0.0
 OPV := $(OWNER)/$(PROJECT):$(VERSION)
 
-## builds docker image using Debian
+## builds docker image using Alpine
 docker-build:
-	## builds terrform binary using debian libc
-	sudo docker build -f Dockerfile -t $(OPV) .
+	## builds terrform binary using alpine musl
+	sudo docker build -f Dockerfile.alpine -t $(OPV) .
 	## copies dynamically linked binary out of container and into current directory
-	sudo docker run --rm -v $(shell pwd):/tmp $(OPV) /bin/bash -c "cp /build/terraform-provider-libvirt /tmp/."
+	sudo docker run --rm -v $(shell pwd):/tmp $(OPV) /bin/sh -c "cp /build/terraform-provider-libvirt /tmp/terraform-provider-libvirt-musl"
 
 ## cleans docker image
 clean:
