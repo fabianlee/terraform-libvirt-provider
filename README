@@ -1,7 +1,10 @@
-Build libvirt provider for KVM (dynamically linked)
+# Build terraform libvirt provider for KVM (dynamically linked)
 
-## for glibc
-make
+## for Debian buster and Ubuntu bionic
+make -f Makefile.buster
 
-## for musl
+## for Debian stretch Ubuntu xenial
+make -f Makefile.stretch
+
+## for alpine with musl library
 make -f Makefile.alpine
