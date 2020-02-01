@@ -1,1 +1,7 @@
-Build libvirt provider for KVM
+Build libvirt provider for KVM (dynamically linked)
+
+## for glibc
+make
+
+## for musl
+make -f Makefile.alpine
