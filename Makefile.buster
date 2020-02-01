@@ -1,6 +1,6 @@
 OWNER := fabianlee
 PROJECT := terraform-libvirt-provider
-VERSION := 1.0.0
+VERSION := 1.13
 OPV := $(OWNER)/$(PROJECT):$(VERSION)
 
 ## builds docker image using Debian

@@ -1,0 +1,37 @@
+#
+# builder image
+#
+FROM golang:1.13-stretch as builder
+RUN mkdir -p /build/src
+
+# make sure git and glide packages are present
+RUN apt-get update \
+	&& apt-get install -y git libvirt-dev openssl unzip make build-essential
+
+# standard golang env setup
+ENV GOPATH=/build
+ENV GOBIN=/usr/local/go/bin
+# enable module support (package management)
+ENV GO111MODULE=on
+WORKDIR $GOPATH/src
+
+# get main project from git
+ARG TERRA_VERSION=0.12.20
+RUN wget https://releases.hashicorp.com/terraform/0.12.20/terraform_${TERRA_VERSION}_linux_amd64.zip \
+	&& unzip terraform_${TERRA_VERSION}_linux_amd64.zip \
+	&& chmod +x terraform \
+	&& mv terraform /usr/local/bin \
+	&& terraform version	
+WORKDIR $GOPATH/src
+RUN pwd && git clone https://github.com/dmacvicar/terraform-provider-libvirt.git \
+	&& ls $GOPATH/src
+WORKDIR $GOPATH/src/terraform-provider-libvirt
+
+# compile, place executable into /build
+RUN go list -m all \
+	&& make \
+	&& chmod a+x terraform-provider-libvirt \
+	&& cp terraform-provider-libvirt $GOPATH/.
+
+CMD [ "/bin/bash" ]
+
