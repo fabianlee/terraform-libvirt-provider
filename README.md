@@ -10,7 +10,7 @@ make -f Makefile.stretch
 make -f Makefile.alpine
 
 
-For Ubuntu 18 bionic, you will need to upgrade qemu/libvirt to use release 0.6.2
+### For Ubuntu 18 bionic, you will need to upgrade qemu/libvirt to use release 0.6.2
 https://github.com/dmacvicar/terraform-provider-libvirt/releases/tag/v0.6.2
 
 # here is the ppa that has a newer version for Ubuntu bionic
@@ -25,4 +25,18 @@ sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys F90C8262A258CC539F
 sudo add-apt-repository ppa:jacob/virtualisation
 sudo apt-get update
 sudo apt-get upgrade
+
+After upgrading virt packages, disk files created will be owned by root unless you specify ownership
+sudo vi /etc/libvirt/qemu.conf
+security_driver = "none"
+user = "<youruser>"
+group = "libvirt"
+dynamic_ownership = 1
+
+# https://github.com/jedi4ever/veewee/issues/996
+sudo systemctl restart libvirtd
+
+# for checking server side version of libvirt/qemu
+$ virsh -c qemu:///system version --daemon
+
 
